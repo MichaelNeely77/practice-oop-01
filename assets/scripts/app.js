@@ -10,29 +10,50 @@ class DOMHelper {
         const destinationElement = document.querySelector(newDestinationSelector);
         destinationElement.append(element);
 
-}
+    }
 }
 
-class ToolTip {
+class Component {
+    constructor(hostElementId, insertBefore = false) {
+    if(hostElementId) {
+        this.hostElement = document.getElementById(hostElementId);
+    } else {
+        this.hostElement = document.body;
+    }
+    this.insertBefore = insertBefore;
+}
+    detach () {
+        if (this.element) {
+            this.element.remove();
+        }
+
+        // this.element.parentElement.removeChild(this.element); - Would work in older browsers
+    }
+    attach() {
+
+       this.hostElement.insertAdjacentElement(this.insertBefore ? 'afterbegin' : 'beforeend', this.element);
+    }
+}
+
+class ToolTip extends Component {
     constructor(closeNotifierFunction) {
+        super();
         this.closeNotifier = closeNotifierFunction;
+        this.create();
     }
     closeToolTip = () =>  {
     this.detach();
     this.closeNotifier();
     }
-    detach () {
-        this.element.remove();
-        // this.element.parentElement.removeChild(this.element); - Would work in older browsers
-    }
-    attach() {
+
+    create() {
         const toolTipElement = document.createElement('div');
         toolTipElement.className = 'card';
         toolTipElement.textContent = 'This is the card';
         toolTipElement.addEventListener('click', this.closeToolTip);
         this.element = toolTipElement;
-        document.body.append(toolTipElement);
     }
+
 }
 
 class ProjectItem {
