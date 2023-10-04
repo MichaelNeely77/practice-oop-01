@@ -13,8 +13,19 @@ class DOMHelper {
 }
 }
 
-class Tooltip {
-
+class ToolTip {
+    detach = () => {
+        this.element.remove();
+        // this.element.parentElement.removeChild(this.element); - Would work in older browsers
+    }
+    attach() {
+        const toolTipElement = document.createElement('div');
+        toolTipElement.className = 'card';
+        toolTipElement.textContent = 'This is the card';
+        toolTipElement.addEventListener('click', this.detach);
+        this.element = toolTipElement;
+        document.body.append(toolTipElement);
+    }
 }
 
 class ProjectItem {
@@ -25,7 +36,15 @@ class ProjectItem {
         this. connectSwitchButton();
     }
 
+    showMoreInfoHandler() {
+        const tooltip = new ToolTip();
+        tooltip.attach();
+    }
+
     connectMoreInfoButton() {
+        const projectItemElement = document.getElementById(this.id);
+        const moreInfoBtn = projectItemElement.querySelector('button:first-of-type');
+        moreInfoBtn.addEventListener('click', this.showMoreInfoHandler);
 
     }
 
