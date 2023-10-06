@@ -36,8 +36,8 @@ class Component {
 }
 
 class ToolTip extends Component {
-    constructor(closeNotifierFunction, text) {
-        super();
+    constructor(closeNotifierFunction, text, hostElementId) {
+        super(hostElementId);
         this.closeNotifier = closeNotifierFunction;
         this.text = text
         this.create();
@@ -51,11 +51,25 @@ class ToolTip extends Component {
         const toolTipElement = document.createElement('div');
         toolTipElement.className = 'card';
         toolTipElement.textContent = this.text;
+
+        const hostElPosLeft = this.hostElement.offsetLeft;
+        const hostElPosTop = this.hostElement.offsetTop;
+        const hostElPosHeight = this.hostElement.clientHeight;
+        const parentElScrolling = this.hostElement.parentElement.scrollTop;
+
+        const x = hostElPosLeft + 20;
+        const y = hostElPosTop + hostElPosHeight -parentElScrolling - 10;
+
+        toolTipElement.style.position = 'absolute';
+        toolTipElement.style.left = x  + 'px';
+        toolTipElement.style.top = y  + 'px';
+
         toolTipElement.addEventListener('click', this.closeToolTip);
         this.element = toolTipElement;
     }
-
 }
+
+
 
 class ProjectItem {
     hasActiveToolTip = false;
@@ -74,7 +88,7 @@ class ProjectItem {
         const tooltipText = projectElement.dataset.extraInfo;
         const tooltip = new ToolTip(() => {
             this.hasActiveToolTip = false;
-        }, tooltipText);
+        }, tooltipText, this.id);
         tooltip.attach();
         this.hasActiveToolTip = true;
     }
