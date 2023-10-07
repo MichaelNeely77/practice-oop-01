@@ -1,1 +1,1 @@
-console.log('Sending analytics...');
+console.log('Sending analytics...the new stuff...with the button');
